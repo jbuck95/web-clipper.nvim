@@ -1,0 +1,125 @@
+*web-clipper.txt*  Clip websites to Markdown in your vault
+
+==============================================================================
+CONTENTS                                      *web-clipper-contents*
+
+  1. Overview .................... |web-clipper-overview|
+  2. Installation ................ |web-clipper-install|
+  3. Usage ....................... |web-clipper-usage|
+  4. Configuration ............... |web-clipper-config|
+  5. Healthcheck ................. |web-clipper-health|
+
+==============================================================================
+OVERVIEW                                     *web-clipper-overview*
+
+web-clipper.nvim clips websites into timestamped Markdown files
+with YAML frontmatter, targeting an Obsidian-compatible vault structure.
+
+Dependencies:
+  - `node` (JavaScript runtime)
+  - `defuddle-clip.mjs` (bundled external clipper script)
+  - One of: `wl-paste`, `xclip`, `xsel`, or `pbpaste`
+
+==============================================================================
+INSTALLATION                                 *web-clipper-install*
+
+  With your plugin manager of choice.  Below is a lazy.nvim example.
+
+>lua
+  {
+    "jbuck95/web-clipper.nvim",
+    config = function()
+      require("web-clipper").setup({
+        vault_dir = "~/Documents/clippings/",
+        clip_bin  = "~/bin/defuddle-clip.mjs",
+        sites = {
+          { name = "NASA APOD", url = "https://apod.nasa.gov/apod/", icon = "🌠" },
+        },
+      })
+    end,
+  }
+<
+
+Vimdoc is generated after installation.  Run |:helptags| if needed.
+
+==============================================================================
+USAGE                                        *web-clipper-usage*
+
+:WebClipper
+                  *:WebClipper*  *web-clipper-commands*
+  `:WebClipper clip`       Clip a URL from visual selection, clipboard,
+                           or manual prompt.
+  `:WebClipper clip_site`  Choose a site from the configured list and
+                           clip it.
+
+<Plug>-Mappings
+                       *<Plug>(WebClipperClip)*
+  <Plug>(WebClipperClip)      Clip from visual selection or clipboard.
+
+                       *<Plug>(WebClipperClipSite)*
+  <Plug>(WebClipperClipSite)  Open the site selector.
+
+  Map them to your preferred keys:
+>
+    vim.keymap.set({ "n", "v" }, "<leader>mc", "<Plug>(WebClipperClip)")
+    vim.keymap.set("n", "<leader>ml", "<Plug>(WebClipperClipSite)")
+<
+
+Lua API                                    *web-clipper-lua-api*
+>
+  require("web-clipper").clip()
+  require("web-clipper").clip_site()
+<
+  Both functions return `nil`.
+
+==============================================================================
+CONFIGURATION                                *web-clipper-config*
+
+                    *web-clipper.setup()*
+  `setup({opts})` merges the user-provided options with the defaults.
+  All fields are optional – the plugin works out of the box.
+
+>
+  require("web-clipper").setup({
+    vault_dir = "~/Documents/clippings/",
+    clip_bin  = "~/bin/defuddle-clip.mjs",
+    clipboard_cmd = "xclip -o -selection clipboard",
+    sites = {
+      { name = "Example", url = "https://example.com", icon = "🔗" },
+    },
+  })
+<
+
+                                    *web-clipper-vault_dir*
+  `vault_dir`       string (default: `"~/Documents/clippings/"`)
+    Directory where `.md` clipping files are stored.
+    Auto-created on first use if it does not exist.
+
+                                    *web-clipper-clip_bin*
+  `clip_bin`        string (default: `"~/bin/defuddle-clip.mjs"`)
+    Path to the `defuddle-clip.mjs` Node.js script.
+
+                                    *web-clipper-clipboard_cmd*
+  `clipboard_cmd`   string (optional)
+    Shell command that writes the system clipboard to stdout.
+    Auto-detected on startup: wl-paste → xclip → xsel →
+    pbpaste → powershell.
+
+                                    *web-clipper-sites*
+  `sites`           `{name:string, url:string, icon?:string}[]`
+    Shortcuts for frequently clipped URLs.  `name` and `url`
+    are required; `icon` is an optional emoji or icon glyph.
+
+==============================================================================
+HEALTHCHECK                                  *web-clipper-health*
+
+  :checkhealth web-clipper  *web-clipper-health*
+
+  Checks:
+  - `node` is available in `$PATH`
+  - `defuddle-clip.mjs` is readable
+  - A clipboard tool is detected
+  - The vault directory exists (or will be created)
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

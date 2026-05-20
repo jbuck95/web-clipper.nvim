@@ -3,6 +3,18 @@ local M = {}
 function M.check()
 	vim.health.start("web-clipper")
 
+	local ok, mod = pcall(require, "web-clipper")
+	if not ok then
+		vim.health.error("module failed to load: " .. tostring(mod))
+		return
+	end
+
+	if type(mod.clip) == "function" and type(mod.clip_site) == "function" then
+		vim.health.ok("module loaded successfully")
+	else
+		vim.health.error("module API incomplete")
+	end
+
 	if vim.fn.executable("node") == 1 then
 		vim.health.ok("node")
 	else
@@ -31,7 +43,7 @@ function M.check()
 	if clip_tool then
 		vim.health.ok("clipboard: " .. clip_tool .. " (auto-detected)")
 	else
-		vim.health.warn("no clipboard tool found – URL input falls back to manual prompt")
+		vim.health.warn("no clipboard tool found -- URL input falls back to manual prompt")
 	end
 
 	if vim.fn.isdirectory(vim.fn.expand("~/Documents/clippings")) == 1 then

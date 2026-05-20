@@ -1,10 +1,20 @@
+---@class web-clipper.Site
+---@field name string Display name of the site
+---@field url  string URL to clip
+---@field icon? string Optional icon (emoji or nerd font)
+
+---@class web-clipper.Config
+---@field vault_dir     string   Directory where .md clipping files are stored
+---@field clip_bin      string   Path to defuddle-clip.mjs executable
+---@field clipboard_cmd? string  System clipboard read command (auto-detected)
+---@field sites         web-clipper.Site[] Pre-configured site shortcuts
+
 local M = {}
 
-local config = {
-	vault_dir = vim.fn.expand("~/Documents/clippings/"),
-	clip_bin  = vim.fn.expand("~/bin/defuddle-clip.mjs"),
-	sites = {},
-}
+local defaults = require("web-clipper.config.defaults")
+
+---@type web-clipper.Config
+local config = vim.deepcopy(defaults)
 
 local function detect_clipboard()
 	if vim.fn.executable("wl-paste") == 1 then
@@ -21,15 +31,25 @@ local function detect_clipboard()
 	return nil
 end
 
-M.setup = function(opts)
+---@param opts? web-clipper.Config
+function M.setup(opts)
 	opts = opts or {}
-	config.vault_dir = vim.fn.expand(opts.vault_dir or config.vault_dir)
-	config.clip_bin = vim.fn.expand(opts.clip_bin or config.clip_bin)
-	config.clipboard_cmd = opts.clipboard_cmd or detect_clipboard()
-	config.sites = opts.sites or {}
-
-	vim.keymap.set({ "n", "v" }, "<leader>mc", M.clip, { desc = "Web Clip" })
-	vim.keymap.set("n", "<leader>ml", M.clip_site, { desc = "Clip from List" })
+	local ok, err = pcall(vim.validate, {
+		vault_dir     = { opts.vault_dir, "string", true },
+		clip_bin      = { opts.clip_bin, "string", true },
+		clipboard_cmd = { opts.clipboard_cmd, "string", true },
+		sites         = { opts.sites, "table", true },
+	})
+	if not ok then
+		vim.notify("web-clipper: invalid config: " .. tostring(err), vim.log.levels.ERROR)
+		return
+	end
+	config = vim.tbl_deep_extend("force", config, opts)
+	config.vault_dir = vim.fn.expand(config.vault_dir)
+	config.clip_bin = vim.fn.expand(config.clip_bin)
+	if not config.clipboard_cmd then
+		config.clipboard_cmd = detect_clipboard()
+	end
 end
 
 local function clip_url(url)
@@ -107,7 +127,9 @@ local function clip_url(url)
 	})
 end
 
-M.clip = function()
+---Clip a URL from visual selection, clipboard, or manual input.
+---@return nil
+function M.clip()
 	local url = ""
 	local mode = vim.fn.mode()
 
@@ -128,7 +150,9 @@ M.clip = function()
 	clip_url(url)
 end
 
-M.clip_site = function()
+---Open the site selector and clip the chosen URL.
+---@return nil
+function M.clip_site()
 	if #config.sites == 0 then
 		vim.notify("No sites configured in web-clipper.sites", vim.log.levels.WARN)
 		return
