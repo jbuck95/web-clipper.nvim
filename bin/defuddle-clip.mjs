@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+// web-clipper content extraction pipeline.
+// This script takes a URL, fetches & cleans the page, and writes Markdown
+// with YAML frontmatter to stdout.  Edit this file to change how content
+// is extracted, filtered, or formatted.  Test with:
+//   node bin/defuddle-clip.mjs https://example.com
 import { Defuddle } from 'defuddle/node';
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';

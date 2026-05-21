@@ -2,7 +2,7 @@
 
 **DEMO**
 
-![Demo](<insert-video-link>)
+![Demo](https://github.com/user-attachments/assets/600376ec-f3d8-45b7-80c7-d98819ae4377)
 
 ## Description
 
@@ -58,6 +58,60 @@ require("web-clipper").clip()
 require("web-clipper").clip_site()
 ```
 
+### Smart formatting (add to your `init.lua`)
+
+Normal `gq` reflows YAML frontmatter, tables, and code blocks —
+ruining clipped files.  This keymap skips those structures so `gq`
+only touches prose paragraphs.  Add to your `init.lua`:
+
+```lua
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.keymap.set("n", "<leader>gq", function()
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      local ranges, start_idx = {}, nil
+      local in_yaml = lines[1] and lines[1]:match("^%-%-%-")
+      local in_code = false
+
+      for i, line in ipairs(lines) do
+        local yaml_end = in_yaml and i > 1 and line:match("^%-%-%-")
+        if yaml_end then in_yaml = false end
+
+        local fence = line:match("^%s*```")
+        if fence then in_code = not in_code end
+
+        local ignore = in_yaml or yaml_end or in_code or fence
+            or line:match("^%s*|")
+            or line:match("!%[.-%]%(.-%)")
+            or line:match("%[.-%]%(.-%)%s*$")
+
+        if ignore then
+          if start_idx then
+            ranges[#ranges + 1] = { start_idx, i - 1 }
+            start_idx = nil
+          end
+        elseif not start_idx and line:match("%S") then
+          start_idx = i
+        end
+      end
+      if start_idx then ranges[#ranges + 1] = { start_idx, #lines } end
+
+      local view = vim.fn.winsaveview()
+      local old_lz, old_ei = vim.o.lazyredraw, vim.o.eventignore
+      vim.o.lazyredraw, vim.o.eventignore = true, "all"
+      for _, r in ipairs(ranges) do
+        if r[1] <= r[2] then
+          vim.cmd(string.format("silent! noautocmd normal! %dGgq%dG", r[1], r[2]))
+        end
+      end
+      vim.o.lazyredraw, vim.o.eventignore = old_lz, old_ei
+      vim.fn.winrestview(view)
+    end, { buffer = true, desc = "Smart gq (skip YAML/tables/code)" })
+  end,
+})
+```
+
 ## Minimal config template
 
 ```lua
@@ -78,6 +132,14 @@ All fields are optional:
 | `sites`         | table    | `{}`                                 | Saved site shortcuts              |
 
 Sites format: `{ name = "Label", url = "https://...", icon = "🔗" }`
+
+## Troubleshooting
+
+If clipped content looks wrong (missing images, broken tables, bad formatting):
+
+1. Edit `bin/defuddle-clip.mjs` — the full extraction pipeline is there
+2. Run it directly: `node bin/defuddle-clip.mjs https://example.com`
+3. Test in Neovim: `:WebClipper clip` and enter a URL
 
 ## Credits
 
