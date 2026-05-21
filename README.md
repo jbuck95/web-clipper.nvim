@@ -1,5 +1,11 @@
 # web-clipper.nvim
 
+**DEMO**
+
+![Demo](<insert-video-link>)
+
+## Description
+
 Clip websites into timestamped Markdown files with YAML frontmatter
 for an Obsidian-compatible vault.
 
@@ -73,3 +79,11 @@ All fields are optional:
 | `sites`         | table    | `{}`                                 | Saved site shortcuts              |
 
 Sites format: `{ name = "Label", url = "https://...", icon = "🔗" }`
+
+## Credits
+
+Uses [defuddle](https://github.com/josh/defuddle) for content extraction.
+
+## License
+
+MIT

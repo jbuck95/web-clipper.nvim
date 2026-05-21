@@ -34,12 +34,12 @@ end
 ---@param opts? web-clipper.Config
 function M.setup(opts)
 	opts = opts or {}
-	local ok, err = pcall(vim.validate, {
-		vault_dir     = { opts.vault_dir, "string", true },
-		clip_bin      = { opts.clip_bin, "string", true },
-		clipboard_cmd = { opts.clipboard_cmd, "string", true },
-		sites         = { opts.sites, "table", true },
-	})
+	local ok, err = pcall(function()
+		vim.validate("vault_dir", opts.vault_dir, "string", true)
+		vim.validate("clip_bin", opts.clip_bin, "string", true)
+		vim.validate("clipboard_cmd", opts.clipboard_cmd, "string", true)
+		vim.validate("sites", opts.sites, "table", true)
+	end)
 	if not ok then
 		vim.notify("web-clipper: invalid config: " .. tostring(err), vim.log.levels.ERROR)
 		return
