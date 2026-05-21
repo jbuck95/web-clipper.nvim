@@ -22,6 +22,7 @@ for an Obsidian-compatible vault.
 ```lua
 {
     "jbuck95/web-clipper.nvim",
+    build = "npm install --prefix bin",
     config = function()
         require("web-clipper").setup({
             vault_dir = "~/Documents/clippings/",
@@ -117,6 +118,7 @@ vim.api.nvim_create_autocmd("FileType", {
 ```lua
 {
     "jbuck95/web-clipper.nvim",
+    build = "npm install --prefix bin",
 }
 ```
 
@@ -149,6 +151,11 @@ Inspired by: [obsidian-clipper](https://github.com/obsidianmd/obsidian-clipper.g
 - [turndown](https://github.com/mixmark-io/turndown) (MIT) – HTML to Markdown conversion
 - [turndown-plugin-gfm](https://github.com/domchristie/turndown-plugin-gfm) (MIT) – GFM table/strikethrough support
 - [jsdom](https://github.com/jsdom/jsdom) (MIT) – DOM manipulation
+
+## Disclaimer
+
+Built for my personal master's thesis workflow.
+AI was used extensively in development.
 
 ## License
 

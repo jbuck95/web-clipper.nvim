@@ -28,6 +28,7 @@ INSTALLATION                                 *web-clipper-install*
 >lua
   {
     "jbuck95/web-clipper.nvim",
+    build = "npm install --prefix bin",
     config = function()
       require("web-clipper").setup({
         vault_dir = "~/Documents/clippings/",
