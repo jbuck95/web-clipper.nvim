@@ -21,10 +21,11 @@ function M.check()
 		vim.health.error("node not found (required for defuddle-clip)")
 	end
 
-	if vim.fn.filereadable(vim.fn.expand("~/bin/defuddle-clip.mjs")) == 1 then
-		vim.health.ok("~/bin/defuddle-clip.mjs")
+	local clip_bin = vim.fn.stdpath("config") .. "/dev/web-clipper.nvim/bin/defuddle-clip.mjs"
+	if vim.fn.filereadable(clip_bin) == 1 then
+		vim.health.ok(clip_bin)
 	else
-		vim.health.error("~/bin/defuddle-clip.mjs not found (core clipper script)")
+		vim.health.error(clip_bin .. " not found (core clipper script)")
 	end
 
 	local clip_tool = nil

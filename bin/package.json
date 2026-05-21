@@ -1,0 +1,11 @@
+{
+  "name": "web-clipper-clip",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "defuddle": "^0.16.0",
+    "jsdom": "^29.0.2",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2"
+  }
+}

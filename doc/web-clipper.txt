@@ -17,7 +17,7 @@ with YAML frontmatter, targeting an Obsidian-compatible vault structure.
 
 Dependencies:
   - `node` (JavaScript runtime)
-  - `defuddle-clip.mjs` (bundled external clipper script)
+  - `defuddle-clip.mjs` (bundled in `bin/`)
   - One of: `wl-paste`, `xclip`, `xsel`, or `pbpaste`
 
 ==============================================================================
@@ -31,7 +31,6 @@ INSTALLATION                                 *web-clipper-install*
     config = function()
       require("web-clipper").setup({
         vault_dir = "~/Documents/clippings/",
-        clip_bin  = "~/bin/defuddle-clip.mjs",
         sites = {
           { name = "NASA APOD", url = "https://apod.nasa.gov/apod/", icon = "🌠" },
         },
@@ -82,7 +81,6 @@ CONFIGURATION                                *web-clipper-config*
 >
   require("web-clipper").setup({
     vault_dir = "~/Documents/clippings/",
-    clip_bin  = "~/bin/defuddle-clip.mjs",
     clipboard_cmd = "xclip -o -selection clipboard",
     sites = {
       { name = "Example", url = "https://example.com", icon = "🔗" },
@@ -96,8 +94,8 @@ CONFIGURATION                                *web-clipper-config*
     Auto-created on first use if it does not exist.
 
                                     *web-clipper-clip_bin*
-  `clip_bin`        string (default: `"~/bin/defuddle-clip.mjs"`)
-    Path to the `defuddle-clip.mjs` Node.js script.
+  `clip_bin`        string (default: `<plugin>/bin/defuddle-clip.mjs`)
+    Path to the `defuddle-clip.mjs` Node.js script (bundled).
 
                                     *web-clipper-clipboard_cmd*
   `clipboard_cmd`   string (optional)

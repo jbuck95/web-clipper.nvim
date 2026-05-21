@@ -14,7 +14,7 @@ for an Obsidian-compatible vault.
 ## Dependencies
 
 - `node` -- JavaScript runtime
-- `defuddle-clip.mjs` -- place in `~/bin/` (or configure `clip_bin`)
+- `defuddle-clip.mjs` -- bundled in `bin/`, dependencies installed via `npm install` (see `bin/`)
 - Clipboard tool (one of): `wl-paste`, `xclip`, `xsel`, `pbpaste`
 
 ## Install (lazy.nvim)
@@ -25,7 +25,6 @@ for an Obsidian-compatible vault.
     config = function()
         require("web-clipper").setup({
             vault_dir = "~/Documents/clippings/",
-            clip_bin  = "~/bin/defuddle-clip.mjs",
             sites = {
                 { name = "NASA APOD", url = "https://apod.nasa.gov/apod/", icon = "🌠" },
             },
@@ -74,7 +73,7 @@ All fields are optional:
 | Field           | Type     | Default                              | Description                       |
 |-----------------|----------|--------------------------------------|-----------------------------------|
 | `vault_dir`     | string   | `~/Documents/clippings/`             | Clipping output directory         |
-| `clip_bin`      | string   | `~/bin/defuddle-clip.mjs`            | Path to defuddle-clip.mjs         |
+| `clip_bin`      | string   | `<plugin>/bin/defuddle-clip.mjs`     | Path to defuddle-clip.mjs         |
 | `clipboard_cmd` | string?  | auto-detected                        | Clipboard read command            |
 | `sites`         | table    | `{}`                                 | Saved site shortcuts              |
 
@@ -82,7 +81,12 @@ Sites format: `{ name = "Label", url = "https://...", icon = "🔗" }`
 
 ## Credits
 
-Uses [defuddle](https://github.com/josh/defuddle) for content extraction.
+Inspired by: [obsidian-clipper](https://github.com/obsidianmd/obsidian-clipper.git)
+
+- [defuddle](https://github.com/kepano/defuddle) (MIT) – content extraction (Steph Ango)
+- [turndown](https://github.com/mixmark-io/turndown) (MIT) – HTML to Markdown conversion
+- [turndown-plugin-gfm](https://github.com/domchristie/turndown-plugin-gfm) (MIT) – GFM table/strikethrough support
+- [jsdom](https://github.com/jsdom/jsdom) (MIT) – DOM manipulation
 
 ## License
 

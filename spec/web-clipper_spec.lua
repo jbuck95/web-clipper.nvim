@@ -63,7 +63,7 @@ describe("web-clipper setup", function()
     local mod = require("web-clipper")
     mod.setup({
       vault_dir = "/tmp/clippings_test/",
-      clip_bin  = vim.fn.expand("~/bin/defuddle-clip.mjs"),
+      clip_bin  = vim.fn.stdpath("config") .. "/dev/web-clipper.nvim/bin/defuddle-clip.mjs",
       sites = {
         { name = "Test", url = "https://example.com" },
       },

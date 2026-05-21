@@ -12,6 +12,6 @@
 ---@type web-clipper.Config
 return {
   vault_dir = vim.fn.expand("~/Documents/clippings/"),
-  clip_bin  = vim.fn.expand("~/bin/defuddle-clip.mjs"),
+  clip_bin  = vim.fn.stdpath("config") .. "/dev/web-clipper.nvim/bin/defuddle-clip.mjs",
   sites = {},
 }
