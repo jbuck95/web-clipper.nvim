@@ -34,7 +34,7 @@ for an Obsidian-compatible vault.
 }
 ```
 
-`setup()` is optional -- the plugin works out of the box with defaults.
+`setup()` is optional.
 
 ## Usage
 
@@ -61,9 +61,8 @@ require("web-clipper").clip_site()
 
 ### Smart formatting (add to your `init.lua`)
 
-Normal `gq` reflows YAML frontmatter, tables, and code blocks —
-ruining clipped files.  This keymap skips those structures so `gq`
-only touches prose paragraphs.  Add to your `init.lua`:
+Normal `gq` reflows YAML frontmatter, tables, and code blocks.
+This keymap skips those structures. `gq` only touches prose paragraphs:
 
 ```lua
 vim.api.nvim_create_autocmd("FileType", {
@@ -137,7 +136,7 @@ Sites format: `{ name = "Label", url = "https://...", icon = "🔗" }`
 
 ## Troubleshooting
 
-If clipped content looks wrong (missing images, broken tables, bad formatting):
+Clipped output looks wrong?
 
 1. Edit `bin/defuddle-clip.mjs` — the full extraction pipeline is there
 2. Run it directly: `node bin/defuddle-clip.mjs https://example.com`
