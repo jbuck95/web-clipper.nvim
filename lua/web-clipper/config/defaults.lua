@@ -9,9 +9,11 @@
 ---@field clipboard_cmd? string  System clipboard read command (auto-detected)
 ---@field sites         web-clipper.Site[] Pre-configured site shortcuts
 
+local plugin_root = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":h:h:h:h")
+
 ---@type web-clipper.Config
 return {
-  vault_dir = vim.fn.expand("~/Documents/clippings/"),
-  clip_bin  = vim.fn.stdpath("config") .. "/dev/web-clipper.nvim/bin/defuddle-clip.mjs",
-  sites = {},
+	vault_dir = vim.fn.expand("~/Documents/clippings/"),
+	clip_bin = plugin_root .. "/bin/defuddle-clip.mjs",
+	sites = {},
 }
